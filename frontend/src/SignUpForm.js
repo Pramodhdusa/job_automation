@@ -88,7 +88,7 @@ function SignupForm({ onClose }) {
           <button type="submit">Sign Up</button>
         </form>
         <p className="footer-text1">
-          Already have an account? <a href="#">Sign in</a>
+          Already have an account? Sign in
         </p>
       </div>
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './index.css';
 import { useNavigate } from 'react-router-dom';
-import SkillsForm from './HomePage';
-import SignupForm from './SignUpForm';  // make sure this is imported
+// import SkillsForm from './HomePage';
+import SignupForm from './SignUpForm';  
 
 const MainPage = () => {
   const navigate = useNavigate();

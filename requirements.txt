@@ -1,12 +1,13 @@
 Flask==3.0.3
 Flask-Cors==5.0.0
-pymongo==4.13.2
-python-dotenv==1.1.0
-pdfplumber==0.11.7
-spacy==3.8.7
-beautifulsoup4==4.13.4
-requests==2.32.3
-pandas==2.2.3
 APScheduler==3.11.0
-sentence-transformers==4.1.0
-torch==2.7.1+cpu  # Critical for memory savings
+sentence-transformers==2.2.2 --no-deps
+transformers==4.38.2
+scikit-learn==1.4.1
+pdfplumber==0.11.7
+pymongo==4.13.2
+spacy==3.8.7
+requests==2.32.3
+beautifulsoup4==4.13.4
+pandas==2.2.3
+python-dotenv==1.1.0

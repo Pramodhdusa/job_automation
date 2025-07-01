@@ -1,0 +1,238 @@
+.skills-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+  padding: 3rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.skills-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.skills-title-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.skills-main-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.skills-subtitle {
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .skills-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.skills-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+}
+
+.skills-card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.skills-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.skills-icon.blue {
+  background-color: #dbeafe;
+}
+
+.skills-icon.green {
+  background-color: #dcfce7;
+}
+
+.skills-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.skills-icon.blue svg {
+  color: #2563eb;
+}
+
+.skills-icon.green svg {
+  color: #16a34a;
+}
+
+.skills-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.skills-card-description {
+  color: #6b7280;
+}
+
+.skills-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.skills-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.skills-label {
+  display: block;
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.skills-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.skills-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.skills-file-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skills-file-input:hover {
+  border-color: #3b82f6;
+}
+
+.skills-file-name {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.skills-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skills-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.skills-checkbox-item:hover {
+  background-color: #f9fafb;
+}
+
+.skills-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: #16a34a;
+}
+
+.skills-checkbox-label {
+  color: #374151;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.skills-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  transform: translateY(0);
+}
+
+.skills-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.skills-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.skills-button.blue {
+  background-color: #2563eb;
+  color: white;
+}
+
+.skills-button.blue:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.skills-button.green {
+  background-color: #16a34a;
+  color: white;
+}
+
+.skills-button.green:hover:not(:disabled) {
+  background-color: #15803d;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.skills-message {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid;
+}
+
+.skills-message.success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.skills-message.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}

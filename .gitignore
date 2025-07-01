@@ -1,0 +1,20 @@
+# Ignore virtual environment
+myenv/
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# React (frontend)
+frontend/node_modules/
+frontend/build/
+
+# OS/IDE files
+.DS_Store
+.idea/
+.vscode/

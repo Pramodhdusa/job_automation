@@ -5,7 +5,7 @@
       "src": "Mongodb.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "50mb",  // Increased from 15mb
+        "maxLambdaSize": "100mb",  // Increased from 15mb
         "runtime": "python3.11"
       }
     },

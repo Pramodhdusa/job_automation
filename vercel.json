@@ -21,22 +21,22 @@
   ],
   "routes": [
     {
-      "src": "/api/upload-resume",
+      "src": "/upload-resume",
       "methods": ["POST"],
       "dest": "/Mongodb.py"
     },
     {
-      "src": "/api/predict",
+      "src": "/predict",
       "methods": ["POST"],
       "dest": "/Mongodb.py"
     },
     {
-      "src": "/api/signup",
+      "src": "/signup",
       "methods": ["POST"],
       "dest": "/Mongodb.py"
     },
     {
-      "src": "/api/(.*)",
+      "src": "/(.*)",
       "dest": "/Mongodb.py"
     },
     {

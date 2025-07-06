@@ -47,13 +47,10 @@ except Exception as e:
     print("❌ MongoDB connection failed:", e)
     client = None
 
-@app.route('/')
+@app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def serve_react_app(path=''):
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
+def serve_react(path):
+    return send_from_directory('../frontend/build', 'index.html')
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -75,7 +72,7 @@ def signup():
     collection.insert_one(new_user)
     return jsonify({"message": "User registered successfully"}), 201
 
-@app.route('/predict', methods=['POST'])
+
 def predict():
     try:
         data = request.json
@@ -338,8 +335,15 @@ if __name__ == '__main__':
 
 
 
-####backup using sentence transformers
-# from flask import Flask, request, jsonify, send_from_directory
+
+##backup----------------
+
+# from flask import Flask, request, jsonify
+# # from flask_jwt_extended import create_access_token
+# # from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
+# # from dotenv import load_dotenv
+# import schedule
+# import time
 # from apscheduler.schedulers.background import BackgroundScheduler
 # from sentence_transformers import SentenceTransformer, util
 # import pdfplumber
@@ -582,4 +586,5 @@ if __name__ == '__main__':
 
 # if __name__ == '__main__':
 #     app.run(debug=True, host='0.0.0.0', port=5000)
+
 

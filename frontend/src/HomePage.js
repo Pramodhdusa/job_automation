@@ -45,7 +45,7 @@
       // const token = localStorage.getItem('token'); 
 
       try {
-        const response = await fetch('http://localhost:5000/predict', {
+        const response = await fetch('http://localhost:5000/api/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@
       formData.append('resume', resume);
 
       try {
-        const response = await fetch('http://localhost:5000/upload-resume', {
+        const response = await fetch('http://localhost:5000/api/upload-resume', {
           method: 'POST',
           body: formData,
         });

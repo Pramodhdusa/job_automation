@@ -2,42 +2,32 @@
   "version": 2,
   "builds": [
     {
-      "src": "Mongodb.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.11"
-      }
+      "src": "api/Mongodb.py",
+      "use": "@vercel/python"
     },
     {
-      "src": "frontend/**",
+      "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build",
-        "installCommand": "cd frontend && npm install",
-        "buildCommand": "cd frontend && npm run build"
+        "distDir": "build"
       }
     }
   ],
   "routes": [
     {
-      "src": "/upload-resume",
+      "src": "/api/upload-resume",
       "methods": ["POST"],
-      "dest": "/Mongodb.py"
+      "dest": "/api/Mongodb.py"
     },
     {
-      "src": "/predict",
+      "src": "/api/predict",
       "methods": ["POST"],
-      "dest": "/Mongodb.py"
+      "dest": "/api/Mongodb.py"
     },
     {
-      "src": "/signup",
+      "src": "/api/signup",
       "methods": ["POST"],
-      "dest": "/Mongodb.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/Mongodb.py"
+      "dest": "/api/Mongodb.py"
     },
     {
       "src": "/static/(.*)",
@@ -45,13 +35,6 @@
         "Cache-Control": "public, max-age=31536000, immutable"
       },
       "dest": "frontend/build/static/$1"
-    },
-    {
-      "src": "/service-worker.js",
-      "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "frontend/build/service-worker.js"
     },
     {
       "src": "/(.*)",

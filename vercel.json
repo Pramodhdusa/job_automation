@@ -5,12 +5,12 @@
       "src": "Mongodb.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
+        "maxLambdaSize": "50mb",  // Increased from 15mb
         "runtime": "python3.11"
       }
     },
     {
-      "src": "frontend/package.json",
+      "src": "frontend/package.json",  // Changed from frontend/**
       "use": "@vercel/static-build",
       "config": {
         "distDir": "build",
@@ -21,27 +21,33 @@
   ],
   "routes": [
     {
-      "src": "/api/upload-resume",
+      "src": "/upload-resume",
       "methods": ["POST"],
       "dest": "/Mongodb.py"
     },
     {
-      "src": "/api/predict",
+      "src": "/predict",
       "methods": ["POST"],
       "dest": "/Mongodb.py"
     },
     {
-      "src": "/api/signup",
+      "src": "/signup",
       "methods": ["POST"],
-      "dest": "/Mongodb.py"
-    },
-    {
-      "src": "/api/(.*)",
       "dest": "/Mongodb.py"
     },
     {
       "src": "/static/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
       "dest": "frontend/build/static/$1"
+    },
+    {
+      "src": "/service-worker.js",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      },
+      "dest": "frontend/build/service-worker.js"
     },
     {
       "src": "/(.*)",

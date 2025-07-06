@@ -47,10 +47,13 @@ except Exception as e:
     print("❌ MongoDB connection failed:", e)
     client = None
 
-@app.route('/', defaults={'path': ''})
+@app.route('/')
 @app.route('/<path:path>')
-def serve_react(path):
-    return send_from_directory('../frontend/build', 'index.html')
+def serve_react_app(path=''):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -72,7 +75,7 @@ def signup():
     collection.insert_one(new_user)
     return jsonify({"message": "User registered successfully"}), 201
 
-
+@app.route('/predict', methods=['POST'])
 def predict():
     try:
         data = request.json

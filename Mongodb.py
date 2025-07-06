@@ -1,28 +1,41 @@
 from flask import Flask, request, jsonify, send_from_directory
 from apscheduler.schedulers.background import BackgroundScheduler
-from sentence_transformers import SentenceTransformer, util
 import pdfplumber
 import re
 from flask_cors import CORS
 import pymongo
 from datetime import datetime
 import os
-import spacy
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import smtplib
 from email.message import EmailMessage
 from dotenv import load_dotenv
-load_dotenv()
-import os
-MONGO_URI = os.getenv("MONGO_URI")
+from textblob import TextBlob
+import nltk
+from collections import Counter
+import string
 
+# Download required NLTK data (do this once)
+try:
+    nltk.data.find('tokenizers/punkt')
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('punkt', quiet=True)
+    nltk.download('stopwords', quiet=True)
+
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+load_dotenv()
+MONGO_URI = os.getenv("MONGO_URI")
 
 app = Flask(__name__, static_folder='frontend/build', static_url_path='/')
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
-model = SentenceTransformer('all-MiniLM-L6-v2')
 
+# Initialize stopwords
+stop_words = set(stopwords.words('english'))
 
 try:
     client = pymongo.MongoClient(MONGO_URI)
@@ -95,27 +108,102 @@ skill_tagss = [
     "Big Data", "Bigdata", "generative ai", "TensorFlow", "PyTorch", "SQL", "MongoDB"
 ]
 
-def extract_skills_from_text(text, skill_tags, threshold=0.65):
-    text = re.sub(r'\s+', ' ', text).lower()
-    sentences = [s.strip() for s in re.split(r'[.,;\n\u2022\-\u2013()]', text) if len(s.strip()) > 10]
-    skill_embeddings = model.encode([s.lower() for s in skill_tags])
+def clean_text(text):
+    """Clean and normalize text for better matching"""
+    text = text.lower()
+    text = re.sub(r'[^\w\s]', ' ', text)  # Remove punctuation
+    text = re.sub(r'\s+', ' ', text)       # Remove extra spaces
+    return text.strip()
+
+def calculate_text_similarity(text1, text2):
+    """Calculate simple similarity between two texts using word overlap"""
+    words1 = set(text1.lower().split())
+    words2 = set(text2.lower().split())
+    
+    if not words1 or not words2:
+        return 0
+    
+    intersection = words1.intersection(words2)
+    union = words1.union(words2)
+    
+    return len(intersection) / len(union) if union else 0
+
+def extract_skills_from_text(text, skill_tags, threshold=0.3):
+    """
+    Extract skills from text using lightweight pattern matching and context analysis
+    Replaces the heavy sentence-transformers approach
+    """
+    text_clean = clean_text(text)
     detected_skills = set()
-
+    
+    # Enhanced skill variations for better matching
+    skill_variations = {}
     for skill in skill_tags:
-        if re.search(r'\\b' + re.escape(skill.lower()) + r'\\b', text.lower()):
-            detected_skills.add(skill)
-
+        variations = [skill.lower()]
+        # Add common variations
+        if skill.lower() == "machine learning":
+            variations.extend(["ml", "machine-learning", "machinelearning"])
+        elif skill.lower() == "deep learning":
+            variations.extend(["deeplearning", "deep-learning", "neural networks"])
+        elif skill.lower() == "natural language processing":
+            variations.extend(["nlp", "text processing", "text analytics"])
+        elif skill.lower() == "react.js":
+            variations.extend(["react", "reactjs"])
+        elif skill.lower() == "node.js":
+            variations.extend(["node", "nodejs"])
+        
+        skill_variations[skill] = variations
+    
+    # Method 1: Direct keyword matching with word boundaries
+    for skill in skill_tags:
+        for variation in skill_variations.get(skill, [skill.lower()]):
+            pattern = r'\b' + re.escape(variation) + r'\b'
+            if re.search(pattern, text_clean):
+                detected_skills.add(skill)
+                break
+    
+    # Method 2: Context-based matching for skills not found directly
+    sentences = sent_tokenize(text)
     for sentence in sentences:
-        if len(sentence.split()) > 3:
-            sentence_embedding = model.encode(sentence)
-            similarities = util.cos_sim(sentence_embedding, skill_embeddings)
-            max_score, best_match_idx = similarities.max().item(), similarities.argmax().item()
-
-            if max_score > threshold:
-                matched_skill = skill_tags[best_match_idx]
-                if matched_skill.lower() in sentence.lower():
-                    detected_skills.add(matched_skill)
-
+        sentence_clean = clean_text(sentence)
+        if len(sentence_clean.split()) > 3:  # Only process meaningful sentences
+            
+            for skill in skill_tags:
+                if skill in detected_skills:
+                    continue  # Skip if already found
+                
+                # Calculate similarity with the skill
+                skill_clean = clean_text(skill)
+                similarity = calculate_text_similarity(sentence_clean, skill_clean)
+                
+                if similarity > threshold:
+                    # Additional context check
+                    skill_words = skill_clean.split()
+                    sentence_words = sentence_clean.split()
+                    
+                    # Check if most skill words appear in the sentence
+                    matches = sum(1 for word in skill_words if word in sentence_words)
+                    if matches >= len(skill_words) * 0.7:  # 70% of skill words must match
+                        detected_skills.add(skill)
+    
+    # Method 3: Fuzzy matching for common abbreviations and variations
+    common_patterns = {
+        r'\bml\b': ['machine learning', 'ML'],
+        r'\bnlp\b': ['natural language processing', 'NLP'],
+        r'\bcv\b': ['computer vision', 'CV'],
+        r'\baws\b': ['AWS'],
+        r'\bsql\b': ['SQL'],
+        r'\breact\b': ['React', 'React.js'],
+        r'\bnode\b': ['Node', 'Node.js'],
+        r'\bai\b': ['generative ai'],
+    }
+    
+    for pattern, skills in common_patterns.items():
+        if re.search(pattern, text_clean):
+            for skill in skills:
+                if skill in skill_tags:
+                    detected_skills.add(skill)
+    
     return list(detected_skills)
 
 @app.route("/upload-resume", methods=['POST'])
@@ -241,7 +329,6 @@ scheduler.start()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-
 
 
 

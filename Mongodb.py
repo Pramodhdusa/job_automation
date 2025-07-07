@@ -324,7 +324,7 @@ def mains():
     print("✅ Job alert emails sent.")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(mains, 'cron', hour=7, minute=40)
+scheduler.add_job(mains, 'cron', hour=7, minute=55)
 
 
 if __name__ == '__main__':

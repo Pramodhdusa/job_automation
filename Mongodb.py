@@ -325,9 +325,10 @@ def mains():
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(mains, 'cron', hour=16, minute=55)
-scheduler.start()
+
 
 if __name__ == '__main__':
+    scheduler.start()
     app.run(debug=True, host='0.0.0.0', port=5000)
 
 
